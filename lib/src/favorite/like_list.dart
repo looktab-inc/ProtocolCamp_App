@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-class MyScreen extends StatelessWidget {
+class LikeList extends StatelessWidget {
+  const LikeList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,6 +15,7 @@ class MyScreen extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
+                
                 // 뒤로 가기 버튼 동작 설정
               },
             ),
@@ -194,6 +197,6 @@ final dataList = [
 
 void main() {
   runApp(MaterialApp(
-    home: MyScreen(),
+    home: LikeList(),
   ));
 }
