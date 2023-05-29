@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-class MyScreen extends StatefulWidget {
+class NftDetail extends StatefulWidget {
   @override
-  _MyScreenState createState() => _MyScreenState();
+  _NftDetailState createState() => _NftDetailState();
 }
 
-class _MyScreenState extends State<MyScreen> {
+class _NftDetailState extends State<NftDetail> {
   List<String> images = [
     'https://avatars.githubusercontent.com/u/18034145?v=4',
     'https://avatars.githubusercontent.com/u/18034145?v=4',
@@ -258,7 +258,7 @@ class _MyScreenState extends State<MyScreen> {
                     elevation: 1,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(
+                      side: const BorderSide(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -272,7 +272,7 @@ class _MyScreenState extends State<MyScreen> {
                   child: Container(
                     alignment: Alignment.center,
                      height: 56,
-                    child: Text(
+                    child: const Text(
                       'View more detail',
                       style: TextStyle(
                         fontFamily: 'Roboto Condensed',
@@ -332,5 +332,5 @@ class _MyScreenState extends State<MyScreen> {
 }
 
 void main() {
-  runApp(MaterialApp(home: MyScreen()));
+  runApp(MaterialApp(home: NftDetail()));
 }
