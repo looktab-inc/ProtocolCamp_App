@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tinji/src/widget/appbar.dart';
 
 class Player {
   String? name = 'nini';
@@ -9,15 +10,17 @@ class Player {
 void main() {
   var noco = Player(name: "nana");
   noco.name;
-  runApp(App());
+  runApp(ReviewWrite());
 }
 
-class App extends StatelessWidget {
+class ReviewWrite extends StatelessWidget {
+  const ReviewWrite({super.key});
+
   @override
   Widget build(BuildContext context) {
     //CupertinoApp or MaterialApp
     return MaterialApp(
-       home: ReviewScreen(),
+      home: ReviewScreen(),
     );
   }
 }
@@ -26,37 +29,20 @@ class ReviewScreen extends StatelessWidget {
   TextEditingController _oneLineReviewController = TextEditingController();
   TextEditingController _detailedReviewController = TextEditingController();
 
+  ReviewScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: BaseAppBar(
+        appBar: AppBar(),
+        title: 'Create a review',
         backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          children: [
-            IconButton(
-              color: Colors.black,
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                // 뒤로 가기 버튼 동작 설정
-              },
-            ),
-            Expanded(
-              child: Container(
-                alignment: Alignment.center,
-                child: Text(
-                  'Create a review',
-                  style: TextStyle(
-                    fontFamily: 'Roboto Condensed',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+        titleColor: Colors.black,
+        onButtonPressed: () {
+          print('뒤로가기 버튼이 클릭되었습니다.');
+          Navigator.pop(context);
+        },
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -87,7 +73,8 @@ class ReviewScreen extends StatelessWidget {
             TextFormField(
               controller: _oneLineReviewController,
               decoration: InputDecoration(
-                hintText: 'Please write a one-line review to evaluate the place',
+                hintText:
+                    'Please write a one-line review to evaluate the place',
                 filled: true,
                 fillColor: Color(0xFFF4F4F5), // gray100
                 border: OutlineInputBorder(

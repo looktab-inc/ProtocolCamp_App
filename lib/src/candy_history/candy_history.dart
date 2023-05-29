@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../widget/appbar.dart';
 
-class MyApp extends StatelessWidget {
+class CandyHistory extends StatelessWidget {
+  const CandyHistory({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,5 +25,5 @@ class MyApp extends StatelessWidget {
 }
 
 void main() {
-  runApp(MyApp());
+  runApp(const CandyHistory());
 }
