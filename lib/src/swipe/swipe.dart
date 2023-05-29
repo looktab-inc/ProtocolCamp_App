@@ -1,10 +1,20 @@
+import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
+import 'package:tinji/src/favorite/like_list.dart';
+import '../candy_history/candy_history.dart'; //CandyHistory
+import '../favorite/like_list.dart'; //LikeList
+import '../dio.dart';
+import '../data.dart';
 
 void main() {
-  runApp(TinderApp());
+
+  runApp(Swipe());
 }
 
-class TinderApp extends StatelessWidget {
+
+class Swipe extends StatelessWidget {
+  const Swipe({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,14 +22,15 @@ class TinderApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: TinderScreen(),
+      home: SwipeScreen(),
     );
   }
 }
 
-class TinderScreen extends StatefulWidget {
+class SwipeScreen extends StatefulWidget {
   @override
-  _TinderScreenState createState() => _TinderScreenState();
+  _SwipeScreenState createState() => _SwipeScreenState();
+  
 }
 
 class TinderCardModel {
@@ -31,30 +42,35 @@ class TinderCardModel {
       {required this.image, required this.name, required this.description});
 }
 
-class _TinderScreenState extends State<TinderScreen>
+class _SwipeScreenState extends State<SwipeScreen>
     with TickerProviderStateMixin {
-  List<TinderCardModel> cardList = [
-    TinderCardModel(
-      image: 'assets/images/test1.png',
-      name: 'Card 1',
-      description: 'Description 1',
-    ),
-    TinderCardModel(
-      image: 'assets/images/test1.png',
-      name: 'Card 2',
-      description: 'Description 2',
-    ),
-    TinderCardModel(
-      image: 'assets/images/test2.png',
-      name: 'Card 3',
-      description: 'Description 3',
-    ),
-    TinderCardModel(
-      image: 'assets/images/test2.png',
-      name: 'Card 4',
-      description: 'Description 4',
-    ),
-  ];
+
+  List<TinderCardModel> cardList = [];
+  int solCount = 0;
+ 
+ @override
+  void initState() {
+    super.initState();
+    fetchDataFromServer();
+  }
+
+  void fetchDataFromServer() async {
+     int sol = await TinjiApi().getUserSol();
+
+    List<dynamic> item = await TinjiApi().getMainStoreData(lat: 1.1,lng: 1.1,range: 1000);
+
+    setState(() {
+      solCount = sol;
+
+      cardList = item.map((data) => TinderCardModel(
+        image:'assets/images/test1.png',
+        name: data['store_name'],
+        description: data['comment'],
+      )).toList();
+      print(cardList);
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +93,13 @@ class _TinderScreenState extends State<TinderScreen>
                 child:
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CandyHistory()),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       elevation: 1,
@@ -102,7 +124,7 @@ class _TinderScreenState extends State<TinderScreen>
                               ),
                               SizedBox(width: 8),
                               Text(
-                                '100',
+                                "${solCount}",
                                 style: TextStyle(
                                   fontFamily: 'Roboto Condensed',
                                   fontSize: 12,
@@ -115,7 +137,13 @@ class _TinderScreenState extends State<TinderScreen>
                         )),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LikeList()),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       elevation: 0,
@@ -167,6 +195,7 @@ class _TinderScreenState extends State<TinderScreen>
       ),
     );
   }
+
 }
 
 class DraggableCard extends StatefulWidget {
@@ -267,13 +296,13 @@ class _DraggableCardState extends State<DraggableCard>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.asset(
-                    widget.card.image,
-                    // width: double.infinity,
-                    width: 150.0,
-                    height: 150.0,
-                    fit: BoxFit.cover,
-                  ),
+                  // Image.asset(
+                  //   widget.card.image,
+                  //   // width: double.infinity,
+                  //   width: 150.0,
+                  //   height: 150.0,
+                  //   fit: BoxFit.cover,
+                  // ),
                   SizedBox(height: 10.0),
                   Text(
                     widget.card.name,
@@ -302,7 +331,7 @@ class _DraggableCardState extends State<DraggableCard>
                     : Alignment.centerLeft,
                 child: SizedBox(
                   width: double.infinity,
-                  height: 800.0,
+                  height: 300.0,
                   child: AnimatedBuilder(
                     animation: _animationController,
                     builder: (context, child) {
@@ -314,198 +343,198 @@ class _DraggableCardState extends State<DraggableCard>
                       );
                     },
 
-                    // child: Card(
-                    //   elevation: 4.0,
-                    //   shape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(10.0),
-                    //   ),
-                    //   child: Container(
-                    //     width: double.infinity,
-                    //     height: 200.0,
-                    //     decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(10.0),
-                    //       color: _isSwipeRight ? Colors.green : Colors.red,
-                    //     ),
-                    //     child: Center(
-                    //         child: Icon(
-                    //           _isSwipeRight ? Icons.favorite : Icons.close,
-                    //           color: Colors.white,
-                    //           size: 80.0,
-                    //         ),
-                    //     ),
-                    //   ),
-                    // ),
-
-                    child: Expanded(
+                    child: Card(
+                      elevation: 4.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                       child: Container(
-                        height: 700,
-                        width: 450,
-                        margin: EdgeInsets.all(50),
-                        padding: EdgeInsets.all(24),
+                        width: double.infinity,
+                        height: 200.0,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(40),
-                          ),
-                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: _isSwipeRight ? Colors.green : Colors.red,
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 48,
-                                      height: 48,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            'assets/images/category.png',
-                                          ),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Tea Well',
-                                      style: TextStyle(
-                                        fontFamily: 'Roboto Condensed',
-                                        fontSize: 34,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      'Oriental Tea Room in the City',
-                                      style: TextStyle(
-                                        fontFamily: 'Roboto Condensed',
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 12,
-                                  height: 12,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        'assets/images/ic_local.png',
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 2),
-                                Text(
-                                  'Gangnam 354, 1km away',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto Condensed',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 12),
-                            Container(
-                              margin: EdgeInsets.only(right: 20),
-                              height: 420,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                image: DecorationImage(
-                                  image: NetworkImage(widget.card.image),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 1),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Colors.white,
-                                      elevation: 1,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                        side: BorderSide(
-                                          color: Colors.grey,
-                                          width: 1,
-                                        ),
-                                      ),
-                                    ),
-                                    child: Container(
-                                      height: 40,
-                                      width: 40,
-                                      child: Center(
-                                        child: Icon(
-                                          size: (20),
-                                          Icons.close,
-                                          color: Color.fromARGB(
-                                              255, 159, 113, 113),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    'View more detail',
-                                    style: TextStyle(
-                                      fontFamily: 'Roboto Condensed',
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    textAlign: TextAlign.left,
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Colors.black,
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                    ),
-                                    child: Container(
-                                      height: 50,
-                                      width: 40,
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.favorite,
-                                          color: Colors.white,
-                                          size: (20),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                          ],
+                        child: Center(
+                          child: Icon(
+                            _isSwipeRight ? Icons.favorite : Icons.close,
+                            color: Colors.white,
+                            size: 80.0,
+                          ),
                         ),
                       ),
                     ),
+
+                    // child: Expanded(
+                    //   child: Container(
+                    //     height: 700,
+                    //     width: 450,
+                    //     margin: EdgeInsets.all(50),
+                    //     padding: EdgeInsets.all(24),
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.all(
+                    //         Radius.circular(40),
+                    //       ),
+                    //       color: Colors.white,
+                    //     ),
+                    //     child: Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: [
+                    //         Row(
+                    //           crossAxisAlignment: CrossAxisAlignment.start,
+                    //           children: [
+                    //             Column(
+                    //               crossAxisAlignment: CrossAxisAlignment.start,
+                    //               children: [
+                    //                 Container(
+                    //                   width: 48,
+                    //                   height: 48,
+                    //                   decoration: BoxDecoration(
+                    //                     borderRadius: BorderRadius.circular(15),
+                    //                     image: DecorationImage(
+                    //                       image: NetworkImage(
+                    //                         'assets/images/category.png',
+                    //                       ),
+                    //                       fit: BoxFit.cover,
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //                 SizedBox(width: 8),
+                    //                 Text(
+                    //                   'Tea Well',
+                    //                   style: TextStyle(
+                    //                     fontFamily: 'Roboto Condensed',
+                    //                     fontSize: 34,
+                    //                     fontWeight: FontWeight.w700,
+                    //                   ),
+                    //                   textAlign: TextAlign.left,
+                    //                 ),
+                    //                 SizedBox(height: 4),
+                    //                 Text(
+                    //                   'Oriental Tea Room in the City',
+                    //                   style: TextStyle(
+                    //                     fontFamily: 'Roboto Condensed',
+                    //                     fontSize: 20,
+                    //                     fontWeight: FontWeight.w400,
+                    //                   ),
+                    //                   textAlign: TextAlign.left,
+                    //                 ),
+                    //               ],
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         SizedBox(height: 4),
+                    //         Row(
+                    //           crossAxisAlignment: CrossAxisAlignment.start,
+                    //           children: [
+                    //             Container(
+                    //               width: 12,
+                    //               height: 12,
+                    //               decoration: BoxDecoration(
+                    //                 borderRadius: BorderRadius.circular(15),
+                    //                 image: DecorationImage(
+                    //                   image: NetworkImage(
+                    //                     'assets/images/ic_local.png',
+                    //                   ),
+                    //                   fit: BoxFit.cover,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //             SizedBox(width: 2),
+                    //             Text(
+                    //               'Gangnam 354, 1km away',
+                    //               style: TextStyle(
+                    //                 fontFamily: 'Roboto Condensed',
+                    //                 fontSize: 12,
+                    //                 fontWeight: FontWeight.w400,
+                    //               ),
+                    //               textAlign: TextAlign.left,
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         SizedBox(height: 12),
+                    //         Container(
+                    //           margin: EdgeInsets.only(right: 20),
+                    //           height: 420,
+                    //           decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(16),
+                    //             image: DecorationImage(
+                    //               image: NetworkImage(widget.card.image),
+                    //               fit: BoxFit.cover,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         SizedBox(height: 20),
+                    //         Padding(
+                    //           padding: EdgeInsets.symmetric(horizontal: 1),
+                    //           child: Row(
+                    //             mainAxisAlignment:
+                    //                 MainAxisAlignment.spaceBetween,
+                    //             children: [
+                    //               ElevatedButton(
+                    //                 onPressed: () {},
+                    //                 style: ElevatedButton.styleFrom(
+                    //                   primary: Colors.white,
+                    //                   elevation: 1,
+                    //                   shape: RoundedRectangleBorder(
+                    //                     borderRadius: BorderRadius.circular(16),
+                    //                     side: BorderSide(
+                    //                       color: Colors.grey,
+                    //                       width: 1,
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //                 child: Container(
+                    //                   height: 40,
+                    //                   width: 40,
+                    //                   child: Center(
+                    //                     child: Icon(
+                    //                       size: (20),
+                    //                       Icons.close,
+                    //                       color: Color.fromARGB(
+                    //                           255, 159, 113, 113),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //               Text(
+                    //                 'View more detail',
+                    //                 style: TextStyle(
+                    //                   fontFamily: 'Roboto Condensed',
+                    //                   fontSize: 14,
+                    //                   fontWeight: FontWeight.w400,
+                    //                 ),
+                    //                 textAlign: TextAlign.left,
+                    //               ),
+                    //               ElevatedButton(
+                    //                 onPressed: () {},
+                    //                 style: ElevatedButton.styleFrom(
+                    //                   primary: Colors.black,
+                    //                   elevation: 0,
+                    //                   shape: RoundedRectangleBorder(
+                    //                     borderRadius: BorderRadius.circular(16),
+                    //                   ),
+                    //                 ),
+                    //                 child: Container(
+                    //                   height: 50,
+                    //                   width: 40,
+                    //                   child: Center(
+                    //                     child: Icon(
+                    //                       Icons.favorite,
+                    //                       color: Colors.white,
+                    //                       size: (20),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //         SizedBox(height: 8),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                   ),
                 ),
               ),
