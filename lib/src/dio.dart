@@ -1,21 +1,20 @@
 import 'package:dio/dio.dart';
 
 class dioClient {
-  
-  static String BASE_URL = "http://localhost:8000";
+  //static String BASE_URL = "http://localhost:8000";
+  static String BASE_URL = "http://15.164.96.192:8000";
 
   static Dio simpleDio(String token) {
-    var dio = Dio(
-      BaseOptions(
-        baseUrl: BASE_URL,
-        connectTimeout: Duration(seconds: 5) ,
-        receiveTimeout: Duration(seconds: 3),
-        headers: {'Content-Type': 'application/json; charset=UTF-8',
-        'authorization':token
-        },
-    )
-    );
-     dio.interceptors.add(CustomLogInterceptor()); 
+    var dio = Dio(BaseOptions(
+      baseUrl: BASE_URL,
+      connectTimeout: Duration(seconds: 5),
+      receiveTimeout: Duration(seconds: 3),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authorization': token
+      },
+    ));
+    dio.interceptors.add(CustomLogInterceptor());
     return dio;
   }
 
@@ -26,7 +25,6 @@ class dioClient {
     }));
   }
 }
-
 
 class CustomLogInterceptor extends Interceptor {
   @override
