@@ -1,22 +1,39 @@
-import 'package:dio/dio.dart';
+import 'package:tinji/src/key.dart';
+
 import 'dio.dart';
 
 class TinjiApi {
-  static String USER_ID = "MH2TIF";
-  static String STORE_ID = "5ATS7f";
-  static String Token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAYXNkZiIsImlhdCI6MTY4NTMzNjY4OSwiZXhwIjoxNjg1MzQyNjg5fQ.1HZvu1EaNuKGoDfyHG5jpzP1TfpZYkXQQSVEjL3FnM8";
+  // static String USER_ID = "MH2TIF";
+  // static String STORE_ID = "5ATS7f";
+
+  // static String Token =
+  // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAYXNkZiIsImlhdCI6MTY4NTQ4NzkwMSwiZXhwIjoxNjg1NDkzOTAxfQ.IrB9qtc6jU8rcrvY-LtZ49yzLMP-L_9IsWqpAQkfdq4";
 
   Future<int> getUserSol() async {
-    final response =
-        await dioClient.simpleDio(Token).get('/api/user/sol/${USER_ID}');
+    String? Token = await getData(ACCESS_KEY);
+    String? userId = await getData(USER_ID);
+    if (Token != null) {
+      print(Token);
+    } else {
+      print('Data does not exist');
+    }
+    print("Token");
+    print(Token.toString());
+    print("userId");
+    print(userId.toString());
+    final response = await dioClient
+        .simpleDio(Token.toString())
+        .get('/api/user/sol/${userId.toString()}');
     return response.data['balnace'];
   }
 
   Future<List<dynamic>> getMainStoreData(
       {required double lat, required double lng, required int range}) async {
-    final response = await dioClient.simpleDio(Token).post(
-        '/api/store/${USER_ID}/reclist',
+    String? Token = await getData(ACCESS_KEY);
+    String? userId = await getData(USER_ID);
+
+    final response = await dioClient.simpleDio(Token.toString()).post(
+        '/api/store/${userId}/reclist',
         data: {"lat": lat, "lng": lng, "range": range});
     //todo 매장 like count 로직 적용요함
     return response.data['store'];
@@ -24,71 +41,100 @@ class TinjiApi {
 
   //좋아요 누른 매장 list
   Future<List<dynamic>> getUserLikeStores() async {
-    final response =
-        await dioClient.simpleDio(Token).get('api/store/${USER_ID}/like');
+    String? Token = await getData(ACCESS_KEY);
+    String? userId = await getData(USER_ID);
+    final response = await dioClient
+        .simpleDio(Token.toString())
+        .get('/api/store/${userId}/like');
+    print(response.data);
     return response.data;
   }
 
   //매장 추천에대한 like
   Future<String> setStoreLike({required String store_id}) async {
-    final response = await dioClient.simpleDio(Token).post(
-        '/api/store/${USER_ID}/reclist',
-        data: {"store_id": store_id, "user_id": USER_ID});
+    String? Token = await getData(ACCESS_KEY);
+    String? userId = await getData(USER_ID);
+    final response = await dioClient.simpleDio(Token.toString()).post(
+        '/api/store/${userId}/reclist',
+        data: {"store_id": store_id, "user_id": userId.toString()});
     print(response);
     return response.data['status'];
   }
 
   //매장정보 불러오기 -> 이슈발생 수정중
   Future<dynamic> getStore({required String store_id}) async {
-    final response =
-        await dioClient.simpleDio(Token).get('api/store/${store_id}/detail');
+    String? Token = await getData(ACCESS_KEY);
+    final response = await dioClient
+        .simpleDio(Token.toString())
+        .get('/api/store/${store_id}/detail');
     return response.data;
   }
 
   //매장정보 추천데이터
   Future<dynamic> getStoreLikeReview({required String store_id}) async {
-    final response =
-        await dioClient.simpleDio(Token).get('api/store/${store_id}/user_rec');
+    String? Token = await getData(ACCESS_KEY);
+    final response = await dioClient
+        .simpleDio(Token.toString())
+        .get('/api/store/${store_id}/rec');
     return response.data;
   }
 
   //매장정보 리뷰
   Future<List<dynamic>> getStoreReview({required String store_id}) async {
-    final response =
-        await dioClient.simpleDio(Token).get('api/store/${store_id}/review');
+    String? Token = await getData(ACCESS_KEY);
+    final response = await dioClient
+        .simpleDio(Token.toString())
+        .get('/api/store/${store_id}/review');
+    return response.data;
+  }
+
+  //캔디히스토리
+  Future<List<dynamic>> getHistory() async {
+    String? Token = await getData(ACCESS_KEY);
+    String? userId = await getData(USER_ID);
+
+    final response = await dioClient
+        .simpleDio(Token.toString())
+        .get('/api/user/candylog/${userId.toString()}');
     return response.data;
   }
 
   //리뷰 작성
   Future<String> setReview({required String content}) async {
+    String? Token = await getData(ACCESS_KEY);
+    String? userId = await getData(USER_ID);
     String img1 = "https://img.hankyung.com/photo/202209/01.31363897.1.jpg";
-    final response = await dioClient.simpleDio(Token).post(
-        '/api/store/${USER_ID}/reclist',
-        data: {"user_id": USER_ID, "content": content, "img1": img1});
+    final response = await dioClient.simpleDio(Token.toString()).post(
+        '/api/store/${userId}/reclist',
+        data: {"user_id": userId, "content": content, "img1": img1});
     print(response);
     return response.data['status'];
   }
 
   //User 닉네임 중복체크
   Future<bool> setUserName({required String name}) async {
-    final response =
-        await dioClient.simpleDio(Token).get('api/user/username/${name}');
+    String? Token = await getData(ACCESS_KEY);
+    final response = await dioClient
+        .simpleDio(Token.toString())
+        .get('/api/user/username/${name}');
     return response.data['available'];
   }
 
   //login
-  Future<String> userLogin(
+  Future<dynamic> userLogin(
       {required String email, required String token}) async {
     final response = await dioClient
         .simpleDio(token)
-        .get('auth/oauth/google', queryParameters: {'email': email});
+        .get('/auth/oauth/google?email=${email}');
+    print(response);
     return response.data;
   }
 
   //회원가입
   Future<User> userJoin({required String email, required String name}) async {
+    String? Token = await getData(ACCESS_KEY);
     final response = await dioClient
-        .simpleDio(Token)
+        .simpleDio(Token.toString())
         .post('/api/user/newuser', data: {"email": email, "name": name});
     print(response);
 
@@ -106,6 +152,7 @@ class User {
   final String username;
   final String email;
   final String pub_key;
+
   User(
       {required this.user_id,
       required this.username,
