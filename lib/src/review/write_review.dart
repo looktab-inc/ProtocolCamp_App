@@ -14,22 +14,37 @@ void main() {
 }
 
 class ReviewWrite extends StatelessWidget {
-  const ReviewWrite({super.key});
-
   @override
   Widget build(BuildContext context) {
-    //CupertinoApp or MaterialApp
     return MaterialApp(
-      home: ReviewScreen(),
+      title: 'Tinji',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: ReviewWriteScreen(),
     );
   }
 }
 
-class ReviewScreen extends StatelessWidget {
+class ReviewWriteScreen extends StatefulWidget {
+  @override
+  _ReviewWriteState get createState => _ReviewWriteState();
+}
+
+class _ReviewWriteState extends State<ReviewWriteScreen> {
   TextEditingController _oneLineReviewController = TextEditingController();
   TextEditingController _detailedReviewController = TextEditingController();
 
-  ReviewScreen({super.key});
+  // File? selectedImage; // Change the type to File?
+
+  // Future<void> _selectImage() async {
+  //   final pickedImage = await ImagePicker().getImage(source: ImageSource.gallery);
+  //   if (pickedImage != null) {
+  //     setState(() {
+  //       // selectedImage = File(pickedImage.path as List<Object>,"name"); // Create File instance from pickedImage.path
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -54,14 +69,24 @@ class ReviewScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18.0),
             ),
             SizedBox(height: 16.0),
-            Container(
-              width: 100.0,
-              height: 100.0,
-              color: Colors.grey,
-              child: Icon(
-                Icons.add_a_photo,
-                size: 50.0,
-                color: Colors.white,
+            InkWell(
+              // onTap: () async {
+              //   _selectImage();
+              //   final pickedImage = await ImagePicker().getImage(source: ImageSource.gallery);
+              //     if (pickedImage != null) {
+              //       // 이미지 선택 후의 작업 수행
+              //       // pickedImage 변수에 선택한 이미지 정보가 담겨 있습니다.
+              //     }
+              // },
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/photo_empty.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 16.0),
@@ -95,6 +120,7 @@ class ReviewScreen extends StatelessWidget {
             TextFormField(
               controller: _detailedReviewController,
               maxLines: null,
+              minLines: 6,
               keyboardType: TextInputType.multiline,
               decoration: InputDecoration(
                 hintText: 'Please write a detailed review',
@@ -112,21 +138,17 @@ class ReviewScreen extends StatelessWidget {
             Spacer(),
             Container(
               width: double.infinity,
-              height: .0,
-              margin: EdgeInsets.symmetric(horizontal: 24.0),
+              height: 56,
               child: ElevatedButton(
                 onPressed: () {
-                  // Perform review submission logic here
-                  String oneLineReview = _oneLineReviewController.text;
-                  String detailedReview = _detailedReviewController.text;
-                  // Use the oneLineReview and detailedReview variables to submit the review
+                  // String oneLineReview = _nameController.text;
                 },
                 style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
                   padding: EdgeInsets.symmetric(vertical: 16.0),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25.0),
+                    borderRadius: BorderRadius.circular(16.0),
                   ),
-                  primary: Colors.black,
                 ),
                 child: Text(
                   'Register Review',
