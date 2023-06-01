@@ -42,6 +42,7 @@ dependencies:
   dio: ^5.1.2
   image_picker: ^0.8.7+5
   shared_preferences: ^2.1.1
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,10 @@ flutter:
     - assets/images/candyBox.png
     - assets/images/back_black.png
     - assets/images/back_white.png
+    - assets/images/ic_people.png
+    - assets/images/ic_hart.png
+    - assets/images/ic_category_main.png
+    - assets/images/ic_candy_main.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
