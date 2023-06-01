@@ -60,22 +60,20 @@ class _SwipeScreenState extends State<SwipeScreen>
     fetchDataFromServer();
   }
 
-    void likeCard({required String storeId}) async {
-     await TinjiApi().setStoreLike(store_id:storeId);
-    }
-
+  void likeCard({required String storeId}) async {
+    String res = await TinjiApi().setStoreLike(store_id: storeId);
+  }
 
   void fetchDataFromServer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    int sol = await TinjiApi().getUserSol();
+    double sol = (await TinjiApi().getUserSol()) as double;
 
+     solCount = (sol*10000) as int ;
     List<dynamic> item =
         await TinjiApi().getMainStoreData(lat: 1.1, lng: 1.1, range: 1000);
 
     setState(() {
-      solCount = sol;
-
       cardList = item
           .map((data) => TinderCardModel(
                 storeId: data['store_id'],
@@ -83,9 +81,11 @@ class _SwipeScreenState extends State<SwipeScreen>
                 storeAddress: data['store_address'],
                 comment: data['comment'],
                 distance: data['distance'],
-                // imgs: (data['img1']==null)? "https://ak-d.tripcdn.com/images/1i61u2224sqwn0mgwAAFE_W_670_10000.jpg" : data['img1'],
-                imgs:
-                    "https://ak-d.tripcdn.com/images/1i61u2224sqwn0mgwAAFE_W_670_10000.jpg",
+                imgs: (data['img1'] == null)
+                    ? "https://ak-d.tripcdn.com/images/1i61u2224sqwn0mgwAAFE_W_670_10000.jpg"
+                    : data['img1'],
+                // imgs:
+                // "https://ak-d.tripcdn.com/images/1i61u2224sqwn0mgwAAFE_W_670_10000.jpg",
               ))
           .toList();
       print(cardList);
@@ -106,13 +106,12 @@ class _SwipeScreenState extends State<SwipeScreen>
                 style: TextStyle(
                   fontFamily: 'Roboto Condensed',
                   fontSize: 24,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w700,
                 ),
                 textAlign: TextAlign.left,
               ),
               Container(
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -125,7 +124,7 @@ class _SwipeScreenState extends State<SwipeScreen>
                       backgroundColor: Colors.black,
                       elevation: 1,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(8),
                         side: BorderSide(
                           color: Colors.grey,
                           width: 1,
@@ -133,17 +132,23 @@ class _SwipeScreenState extends State<SwipeScreen>
                       ),
                     ),
                     child: Container(
-                        height: 40,
-                        width: 40,
+                        height: 28,
                         child: Center(
                           child: Row(
                             children: [
-                              Icon(
-                                size: (10),
-                                Icons.cabin,
-                                color: Color.fromARGB(255, 159, 113, 113),
+                              Container(
+                                width: 18,
+                                height: 18,
+                                margin: EdgeInsets.only(right: 10),
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                      'assets/images/ic_candy_main.png',
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
-                              SizedBox(width: 8),
                               Text(
                                 "${solCount}",
                                 style: TextStyle(
@@ -155,41 +160,51 @@ class _SwipeScreenState extends State<SwipeScreen>
                               ),
                             ],
                           ),
-                        )),
+                        )
+                        ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
+                  SizedBox(width: 12),
+                  GestureDetector(
+                    onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const LikeList()),
                       );
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      elevation: 0,
-                    ),
-                    child: Icon(
-                      Icons.favorite,
-                      color: Colors.white,
-                      size: (20),
+                    child: Container(
+                      width: 24,
+                      height: 24,
+                      margin: EdgeInsets.only(right: 12),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(
+                            'assets/images/ic_hart.png',
+                          ),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
+                  GestureDetector(
+                    onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const MyPage()),
                       );
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      elevation: 0,
-                    ),
-                    child: Icon(
-                      Icons.people,
-                      color: Colors.white,
-                      size: (20),
+                    child: Container(
+                      width: 24,
+                      height: 24,
+                      margin: EdgeInsets.only(right: 10),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(
+                            'assets/images/ic_people.png',
+                          ),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
                 ]),
@@ -208,7 +223,7 @@ class _SwipeScreenState extends State<SwipeScreen>
                       if (isRightSwipe) {
                         // 좋아요 동작 처리
                         setState(() {
-                          likeCard(storeId:cardList[i].storeId );
+                          likeCard(storeId: cardList[i].storeId);
                         });
                         print('Liked ${cardList[i]}');
                       } else {
@@ -308,14 +323,18 @@ class _DraggableCardState extends State<DraggableCard>
       onHorizontalDragEnd: _handleDragEnd,
       child: Stack(
         children: <Widget>[
-          CardWidget(
-            id: widget.card.storeId,
-            title: widget.card.storeName,
-            content: widget.card.comment,
-            local: widget.card.comment,
-            distance: widget.card.storeAddress,
-            image: widget.card.imgs,
-          ),
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: CardWidget(
+              id: widget.card.storeId,
+              title: widget.card.storeName,
+              content: widget.card.comment,
+              local: widget.card.comment,
+              distance: widget.card.storeAddress,
+              image: widget.card.imgs,
+            ),
+          )
+
           // Card(
           //   elevation: 4.0,
           //   shape: RoundedRectangleBorder(
@@ -366,11 +385,13 @@ class _DraggableCardState extends State<DraggableCard>
           //     ),
           //   ),
           // ),
+          ,
           Positioned.fill(
             child: Opacity(
-              opacity: 0.91, // 원하는 반투명도 값 (0.0 ~ 1.0 사이)
+              opacity: 1.0, // 원하는 반투명도 값 (0.0 ~ 1.0 사이)
               child: Container(
-                margin: EdgeInsets.all(24.0),
+                margin:
+                    EdgeInsets.only(right: 20, left: 20, bottom: 20, top: 10),
                 alignment: _isSwipeRight
                     ? Alignment.centerRight
                     : Alignment.centerLeft,
@@ -392,7 +413,7 @@ class _DraggableCardState extends State<DraggableCard>
                       id: widget.card.storeId,
                       title: widget.card.storeName,
                       content: widget.card.comment,
-                      local: widget.card.comment,
+                      local: widget.card.storeAddress,
                       distance: widget.card.storeAddress,
                       image: widget.card.imgs,
                     ),

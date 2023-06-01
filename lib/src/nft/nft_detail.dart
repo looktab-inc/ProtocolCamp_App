@@ -1,5 +1,6 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:tinji/src/review/write_review.dart';
 import 'package:tinji/src/shop/shop.dart';
 
@@ -27,7 +28,6 @@ class NftDetail extends StatelessWidget {
 
 class NftDetailScreen extends StatefulWidget {
   late NftModel nftModel;
-
   NftDetailScreen(this.nftModel);
 
   @override
@@ -43,11 +43,26 @@ class _NftDetailState extends State<NftDetailScreen> {
     nftModel = widget.nftModel;
   }
 
-  List<String> images = [
-    'https://avatars.githubusercontent.com/u/18034145?v=4',
-    'https://avatars.githubusercontent.com/u/18034145?v=4',
-    'https://avatars.githubusercontent.com/u/18034145?v=4',
+  List<String> type = [
+    'Opening hours',
+    'Business days',
+    'Created date',
+    'Contact information',
+    'Parking facilities'
   ];
+  List<String> data = [
+    '10:00 AM to 6:00 PM',
+    '2023.06.02',
+    'Monday to Saturday',
+    '+1-123-456-7890',
+    'Free parking available'
+  ];
+
+  // List<String> images = [
+  //   'https://avatars.githubusercontent.com/u/18034145?v=4',
+  //   'https://avatars.githubusercontent.com/u/18034145?v=4',
+  //   'https://avatars.githubusercontent.com/u/18034145?v=4',
+  // ];
 
   int _currentPage = 0;
 
@@ -67,7 +82,7 @@ class _NftDetailState extends State<NftDetailScreen> {
                 });
               },
             ),
-            items: images.map((image) {
+            items: nftModel.image.map((image) {
               return Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -79,6 +94,7 @@ class _NftDetailState extends State<NftDetailScreen> {
             }).toList(),
           ),
           Container(
+            margin: EdgeInsets.only(top: 60),
             height: 56,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(0),
@@ -87,11 +103,21 @@ class _NftDetailState extends State<NftDetailScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/back_black.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
                 Text(
                   nftModel.storeName,
                   style: TextStyle(
@@ -115,7 +141,7 @@ class _NftDetailState extends State<NftDetailScreen> {
                 top: 420, left: MediaQuery.of(context).size.width / 2 - 28),
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: images.length,
+                itemCount: nftModel.image.length,
                 itemBuilder: (context, index) {
                   return Container(
                     margin: EdgeInsets.symmetric(horizontal: 5),
@@ -160,7 +186,7 @@ class _NftDetailState extends State<NftDetailScreen> {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              nftModel.description,
+                              nftModel.description.substring(0, 25),
                               style: TextStyle(
                                 fontFamily: 'Roboto Condensed',
                                 fontSize: 16,
@@ -216,6 +242,7 @@ class _NftDetailState extends State<NftDetailScreen> {
                     ),
                     const SizedBox(height: 12),
                     Text(
+                      // nftModel.description
                       'It was quite quiet and atmospheric. There were many kinds of tea, so it was fun to choose. If you want to introduce a good place to an acquaintance and talk calmly, I recommend this place.',
                       style: TextStyle(
                         fontFamily: 'Roboto Condensed',
@@ -224,20 +251,20 @@ class _NftDetailState extends State<NftDetailScreen> {
                       ),
                       textAlign: TextAlign.left,
                     ),
-                    const SizedBox(height: 24),
                     Row(
                       children: [
                         Expanded(
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: 2,
+                            itemCount: 5,
                             itemBuilder: (context, index) {
                               return Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    index == 0 ? 'Created date' : 'nft_address',
+                                    type[index],
+                                    // index == 0 ? 'Opening hours' : 'Business days',
                                     style: TextStyle(
                                         fontFamily: 'Roboto Condensed',
                                         fontSize: 14,
@@ -247,7 +274,8 @@ class _NftDetailState extends State<NftDetailScreen> {
                                   ),
                                   SizedBox(width: 8),
                                   Text(
-                                    nftModel.time,
+                                    data[index],
+                                    // nftModel.time,
                                     style: TextStyle(
                                       fontFamily: 'Roboto Condensed',
                                       fontSize: 14,
@@ -288,7 +316,7 @@ class _NftDetailState extends State<NftDetailScreen> {
                             ),
                             padding: EdgeInsets.zero,
                             minimumSize: Size(
-                              (MediaQuery.of(context).size.width - 24) / 2 - 8,
+                              (MediaQuery.of(context).size.width - 24) / 2 - 18,
                               56,
                             ),
                           ),
@@ -322,7 +350,7 @@ class _NftDetailState extends State<NftDetailScreen> {
                             ),
                             padding: EdgeInsets.zero,
                             minimumSize: Size(
-                              (MediaQuery.of(context).size.width - 24) / 2 - 8,
+                              (MediaQuery.of(context).size.width - 24) / 2 - 18,
                               56,
                             ),
                           ),
@@ -337,7 +365,7 @@ class _NftDetailState extends State<NftDetailScreen> {
                                   width: 20,
                                   height: 20,
                                 ),
-                                SizedBox(width: 8),
+                                SizedBox(width: 2),
                                 Text(
                                   'Create a review',
                                   style: TextStyle(

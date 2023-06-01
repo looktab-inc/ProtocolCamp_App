@@ -259,6 +259,17 @@ class _SignInDemoState extends State<SignInDemo> {
           const Text('You are not currently signed in.'),
           // This method is used to separate mobile from web code with conditional exports.
           // See: src/sign_in_button.dart
+           Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                      'assets/images/ic_go.png',
+                    ),
+                  ),
+                ),
+              ),
           buildSignInButton(
             onPressed: _handleSignIn,
           ),
@@ -270,9 +281,9 @@ class _SignInDemoState extends State<SignInDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Google Sign In'),
-        ),
+        // appBar: AppBar(
+        //   title: const Text('Google Sign In'),
+        // ),
         body: ConstrainedBox(
           constraints: const BoxConstraints.expand(),
           child: _buildBody(),

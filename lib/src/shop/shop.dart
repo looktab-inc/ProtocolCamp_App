@@ -45,12 +45,6 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
           'https://ak-d.tripcdn.com/images/1i65722349cq8eexcAADC_W_670_10000.jpg',
       title: "title",
       description: "dddddd",
-    ),
-    DataModel(
-      imageUrl:
-          'https://ak-d.tripcdn.com/images/1i62z2224t9d2bnrkBAC3_W_670_10000.jpg',
-      title: "title",
-      description: "dddddd",
     )
   ];
 
@@ -61,8 +55,6 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
     address: "address",
     nftAddress: "nftAddress",
     howToReach: "howToReach",
-    latitude: 1,
-    longitude: 2,
     openTime: "openTime",
     closeTime: "closeTime",
     closeDays: 3,
@@ -88,35 +80,45 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
         address: storeData['address'] ??= 'Gangnam  354, 1km away',
         nftAddress: storeData['nftAddress'] ??= '0x000',
         howToReach: storeData['howToReach'] ??= '2,000',
-        latitude: storeData['latitude'] ??= 1,
-        longitude: storeData['longitude'] ??= 2,
         openTime: storeData['openTime'] ??= '11:00',
         closeTime: storeData['closeTime'] ??= '22:00',
         closeDays: storeData['closeDays'] ??= 3,
         image: storeData['image'],
       );
 
-      var item1 = review1
+      reviewList = review1
           .map((data) => DataModel(
-                imageUrl:
-                    'https://ak-d.tripcdn.com/images/1i62z2224t9d2bnrkBAC3_W_670_10000.jpg',
+                imageUrl: data['img1'],
                 title: data['user_id'],
                 description: data['content'],
               ))
           .toList();
-
-      reviewList = item1;
     });
   }
 
   List<String> images = [
-    'https://ak-d.tripcdn.com/images/1i62z2224t9d2bnrkBAC3_W_670_10000.jpg',
-    'https://avatars.githubusercontent.com/u/18034145?v=4',
-    'https://ak-d.tripcdn.com/images/1i61n22349cq8e77lB883_W_670_10000.jpg',
+    'https://ak-d.tripcdn.com/images/1mi6s2215f0pl4usgE91E_W_800_0_R5_Q90.jpg?proc=source/trip',
+    'https://ak-d.tripcdn.com/images/1mi5i2224v42r7e8g881D_W_800_0_R5_Q90.jpg?proc=source/trip',
+    'https://ak-d.tripcdn.com/images/1mi592215f0pl4n2p7539_W_800_0_R5_Q90.jpg?proc=source/trip',
+    'https://ak-d.tripcdn.com/images/1mi0m2224v42r7lya270E_W_800_0_R5_Q90.jpg?proc=source/trip',
   ];
 
   int _currentPage = 0;
 
+  List<String> type = [
+    'Opening hours',
+    'Business days',
+    'Created date',
+    'Contact information',
+    'Parking facilities'
+  ];
+  List<String> data = [
+    '10:00 AM to 6:00 PM',
+    '2023.06.02',
+    'Monday to Saturday',
+    '+1-123-456-7890',
+    'Free parking available'
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,6 +147,7 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
             }).toList(),
           ),
           Container(
+            margin: EdgeInsets.only(top: 60),
             height: 56,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(0),
@@ -156,7 +159,7 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
                 IconButton(
                     icon: Icon(Icons.arrow_back),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.of(context).pop();
                     }),
                 Text(
                   store.name ??= "Tinji",
@@ -169,7 +172,7 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
                   textAlign: TextAlign.center,
                 ),
                 IconButton(
-                  icon: Icon(Icons.delete),
+                  icon: Icon(null),
                   onPressed: () {},
                 ),
               ],
@@ -230,8 +233,8 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              store.description ??=
-                                  'Oriental Tea Room in the City',
+                              // store.description ??=
+                              'Oriental Tea Room in the City',
                               style: TextStyle(
                                 fontFamily: 'Roboto Condensed',
                                 fontSize: 16,
@@ -292,7 +295,8 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'It was quite quiet and atmospheric. There were many kinds of tea, so it was fun to choose. If you want to introduce a good place to an acquaintance and talk calmly, I recommend this place.',
+                      store.description ??=
+                          'It was quite quiet and atmospheric. There were many kinds of tea, so it was fun to choose. If you want to introduce a good place to an acquaintance and talk calmly, I recommend this place.',
                       style: TextStyle(
                         fontFamily: 'Roboto Condensed',
                         fontSize: 14,
@@ -306,14 +310,15 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
                         Expanded(
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: 2,
+                            itemCount: 5,
                             itemBuilder: (context, index) {
                               return Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    index == 0 ? 'Created date' : 'nft_address',
+                                    type[index],
+                                    // index == 0 ? 'Created date' : 'nft_address',
                                     style: TextStyle(
                                         fontFamily: 'Roboto Condensed',
                                         fontSize: 14,
@@ -323,9 +328,10 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
                                   ),
                                   SizedBox(width: 8),
                                   Text(
-                                    index == 0
-                                        ? "${store.openTime?.substring(0, 2)}-${store.closeTime?.substring(0, 2)}"
-                                        : '${store.nftAddress}',
+                                    data[index],
+                                    // index == 0
+                                    //     ? "${store.openTime?.substring(0, 2)}-${store.closeTime?.substring(0, 2)}"
+                                    //     : '${store.nftAddress}',
                                     style: TextStyle(
                                       fontFamily: 'Roboto Condensed',
                                       fontSize: 14,
@@ -354,7 +360,6 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
                         textAlign: TextAlign.left,
                       ),
                     ),
-                    SizedBox(height: 20),
                     Row(
                       children: [
                         Expanded(
@@ -365,7 +370,7 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
                               final data = reviewList[index];
 
                               return Card(
-                                margin: EdgeInsets.only(bottom: 20),
+                                margin: EdgeInsets.only(bottom: 16),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
@@ -384,7 +389,8 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
                                                   BorderRadius.circular(15),
                                               image: DecorationImage(
                                                 image: AssetImage(
-                                                    "/assets/images/gray.png"),
+                                                  'assets/images/gray.png',
+                                                ),
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -408,25 +414,13 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
                                                           39, 39, 42, 1),
                                                     ),
                                                   ),
-                                                  Text(
-                                                    data.description,
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                          'Roboto Condensed',
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Color.fromRGBO(
-                                                          113, 113, 122, 1),
-                                                    ),
-                                                  ),
                                                 ],
                                               ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 12),
+                                      SizedBox(height: 8),
                                       Container(
                                         width:
                                             MediaQuery.of(context).size.width,
@@ -441,6 +435,18 @@ class _ShopScreenState extends State<ShopScreen> with TickerProviderStateMixin {
                                           ),
                                         ),
                                       ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        data.description,
+                                        style: TextStyle(
+                                          fontFamily: 'Roboto Condensed',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color:
+                                              Color.fromRGBO(113, 113, 122, 1),
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
                                     ]),
                               );
 
@@ -493,8 +499,6 @@ class StoreData {
   String? address;
   String? nftAddress;
   String? howToReach;
-  double? latitude;
-  double? longitude;
   String? openTime;
   String? closeTime;
   int? closeDays;
@@ -506,8 +510,6 @@ class StoreData {
     required this.address,
     required this.nftAddress,
     required this.howToReach,
-    required this.latitude,
-    required this.longitude,
     required this.openTime,
     required this.closeTime,
     required this.closeDays,

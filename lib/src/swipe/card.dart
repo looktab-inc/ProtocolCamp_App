@@ -23,7 +23,7 @@ class CardWidget extends StatelessWidget {
     return Card(
       color: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(40.0),
+        borderRadius: BorderRadius.circular(32.0),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -33,13 +33,13 @@ class CardWidget extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  width: 48,
-                  height: 48,
+                  width: 36,
+                  height: 36,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
                       image: AssetImage(
-                        'assets/images/category.png',
+                        'assets/images/ic_category_main.png',
                       ),
                       fit: BoxFit.cover,
                     ),
@@ -47,13 +47,14 @@ class CardWidget extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8.0),
+            SizedBox(height: 4.0),
             Text(
               title,
               style: TextStyle(
                 fontFamily: 'Roboto Condensed',
-                fontSize: 34.0,
-                fontWeight: FontWeight.bold,
+                fontSize: 30.0,
+                fontWeight: FontWeight.w800,
+
               ),
               textAlign: TextAlign.left,
             ),
@@ -99,9 +100,9 @@ class CardWidget extends StatelessWidget {
             SizedBox(height: 20.0),
             Container(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height - 370.0, // 카드의 높이에 맞추기
+              height: MediaQuery.of(context).size.height - 360.0, // 카드의 높이에 맞추기
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
+                borderRadius: BorderRadius.circular(32),
                 image: DecorationImage(
                   image: NetworkImage(
                     image,

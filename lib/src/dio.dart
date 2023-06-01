@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
 class dioClient {
-  //static String BASE_URL = "http://localhost:8000";
-  static String BASE_URL = "http://15.164.96.192:8000";
+  // static String BASE_URL = "http://localhost:8000";
+  static String BASE_URL = "http://3.34.52.156:8000";
 
   static Dio simpleDio(String token) {
     var dio = Dio(BaseOptions(
@@ -44,7 +44,8 @@ class CustomLogInterceptor extends Interceptor {
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
     print(
-      'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}',
+      'ERROR[${err} + ${err.response?.statusCode}] => PATH: ${err.requestOptions
+        .path}',
     );
     super.onError(err, handler);
   }

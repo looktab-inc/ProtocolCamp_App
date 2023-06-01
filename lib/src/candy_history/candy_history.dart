@@ -5,6 +5,7 @@ import 'package:tinji/src/shop/shop.dart';
 
 import '../data.dart';
 import '../widget/appbar.dart';
+import 'package:intl/intl.dart';
 
 class CandyHistory extends StatelessWidget {
   const CandyHistory({
@@ -14,7 +15,6 @@ class CandyHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Tinji',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -29,14 +29,12 @@ class CandyHistoryScreen extends StatefulWidget {
 }
 
 class History {
-  String? userId;
   String? comment;
   String? title;
   int? amount;
   String? date;
   String? time;
   History({
-    required this.userId,
     required this.comment,
     required this.title,
     required this.amount,
@@ -46,30 +44,9 @@ class History {
 }
 
 class _CandyHistoryState extends State<CandyHistoryScreen> {
-  var candyCount = 100;
- List<History> history = [
-      History(
-          userId: "userId",
-          comment: "comment",
-          title: "title",
-          amount: 20,
-          time: "21:20",
-          date: "date"),
-      History(
-          userId: "userId",
-          comment: "comment",
-          title: "title",
-          amount: 20,
-          time: "21:20",
-          date: "date"),
-      History(
-          userId: "userId",
-          comment: "comment",
-          title: "title",
-          amount: 20,
-          time: "21:20",
-          date: "date")
-    ];
+  var candyCount = 0;
+  late List<History> history ;
+
 
   @override
   void initState() {
@@ -78,19 +55,19 @@ class _CandyHistoryState extends State<CandyHistoryScreen> {
   }
 
   Future<void> getHistoryData() async {
-    int sol = await TinjiApi().getUserSol();
+    double sol = await TinjiApi().getUserSol();
     List<dynamic> data = await TinjiApi().getHistory();
-   
+    
     setState(() {
-      candyCount = sol;
+      candyCount = (sol*10000) as int;
       history = data
           .map((data) => History(
-              userId: " data['nft_address']",
-              comment: data['storeInfo']['name'],
-              title: data['rec_data']['comment'],
-              amount: data['storeInfo']['address'],
-              time: data['storeInfo']['id'],
-              date: ""))
+              comment: data['comment'].split(" ")[0],
+              title: data['comment'].split(" ").sublist(1).join(' ').toString(),
+              time: DateFormat('HH:mm').format(DateTime.parse(data['date'])),
+              date:  DateFormat('yyyy-MM-dd').format(DateTime.parse(data['date'])),
+              amount: data['amount'])
+              )
           .toList();
     });
   }
@@ -98,8 +75,8 @@ class _CandyHistoryState extends State<CandyHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-            child: Container(
+    body: SingleChildScrollView(
+      child: Container(
       color: Colors.black,
       child: Stack(
         children: [
@@ -131,7 +108,7 @@ class _CandyHistoryState extends State<CandyHistoryScreen> {
                   SizedBox(height: 4),
                   Text(
                     textAlign: TextAlign.left,
-                    (candyCount * 0.91).toString(),
+                    (candyCount * 0.031).toString(),
                     style: TextStyle(
                         color: Color.fromARGB(122, 255, 255, 255),
                         fontSize: 14,
@@ -169,6 +146,7 @@ class _CandyHistoryState extends State<CandyHistoryScreen> {
               children: [
                 GestureDetector(
                   onTap: () {
+                    Navigator.of(context).pop();
                     // 버튼이 클릭되었을 때 실행할 코드 작성
                     print('Button clicked!');
                   },
@@ -286,17 +264,16 @@ class _CandyHistoryState extends State<CandyHistoryScreen> {
                                               ),
                                             ),
                                           ),
-                                          SizedBox(width: 8),
-                                          Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsets.all(0),
+                                        SizedBox(width: 8),
+                                        Container(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(0),
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    data.title ??=
-                                                        "Store Review NFT",
+                                                    data.title ??=  "Store Review NFT",
                                                     style: TextStyle(
                                                       fontFamily:
                                                           'Roboto Condensed',
@@ -325,7 +302,6 @@ class _CandyHistoryState extends State<CandyHistoryScreen> {
                                               ),
                                             ),
                                           ),
-                                          Spacer(),
                                           Expanded(
                                             child: Padding(
                                               padding:

@@ -27,8 +27,8 @@ class LikeListScreen extends StatefulWidget {
 
 class _LikeListScreenState extends State<LikeListScreen>
     with TickerProviderStateMixin {
-  List<NftModel> dataList = [];
-
+   List<NftModel> dataList = [];
+    
   @override
   void initState() {
     super.initState();
@@ -37,21 +37,19 @@ class _LikeListScreenState extends State<LikeListScreen>
 
   void fetchDataFromServer() async {
     List<dynamic> item = await TinjiApi().getUserLikeStores();
-
+   
     setState(() {
       dataList = item
           .map((data) => NftModel(
-              nftAddress: " data['nft_address']",
+              nftAddress: " -",
               storeName: data['storeInfo']['name'],
               description: data['rec_data']['comment'],
               address: data['storeInfo']['address'],
               shopId: data['storeInfo']['id'],
-              time:
-                  "${data['storeInfo']['open_time']}${data['storeInfo']['close_time']}",
+              time:  "${data['storeInfo']['open_time']}${data['storeInfo']['close_time']}",
               visited: data['visited'],
-              image: [data['rec_data']['img1']]))
-          .toList();
-      print(dataList);
+              image: [data['rec_data']['img1'],data['rec_data']['img2'],data['rec_data']['img3'],data['rec_data']['img4']]))
+          .toList()+ dataList;
     });
   }
 
@@ -59,7 +57,16 @@ class _LikeListScreenState extends State<LikeListScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-     
+           appBar: BaseAppBar(
+        appBar: AppBar(),
+        title: 'Like',
+        backgroundColor: Colors.white,
+        titleColor: Colors.black,
+        onButtonPressed: () {
+          print('뒤로가기 버튼이 클릭되었습니다.');
+          Navigator.of(context).pop();
+        },
+      ),
       body: ListView.builder(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         itemCount: dataList.length,

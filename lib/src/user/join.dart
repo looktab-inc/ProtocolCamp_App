@@ -12,10 +12,10 @@ class Join extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Tinji',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      // title: 'Tinji',
+      // theme: ThemeData(
+      //   primarySwatch: Colors.blue,
+      // ),
       home: JoinScreen(),
     );
   }
@@ -71,6 +71,7 @@ class _JoinState extends State<JoinScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: BaseAppBar(
         appBar: AppBar(),
@@ -79,7 +80,7 @@ class _JoinState extends State<JoinScreen> with TickerProviderStateMixin {
         titleColor: Colors.black,
         onButtonPressed: () {
           print('뒤로가기 버튼이 클릭되었습니다.');
-          Navigator.pop(context);
+          Navigator.of(context).pop();
         },
       ),
       body: Padding(
@@ -87,47 +88,53 @@ class _JoinState extends State<JoinScreen> with TickerProviderStateMixin {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Please enter your nickname',
-              style: TextStyle(fontSize: 18.0),
-            ),
-            SizedBox(height: 8.0),
-            TextFormField(
-              onChanged: onTextChanged,
-              maxLength: 10,
-              decoration: InputDecoration(
-                hintText: 'Please write in 10 characters or less',
+            // Expanded(
+            //     child: SingleChildScrollView(
+            //   child: Column(
+            //     children: [
+                  Text(
+                    'Please enter your nickname',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                  SizedBox(height: 8.0),
+                  TextFormField(
+                    onChanged: onTextChanged,
+                    maxLength: 10,
+                    decoration: InputDecoration(
+                      hintText: 'Please write in 10 characters or less',
 
-                filled: true,
-                fillColor: Color(0xFFF4F4F5), // gray100
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              controller: _nameController,
-              style: TextStyle(
-                color: Color(0xFF09090B), // gray950
-              ),
-            ),
-            if (text.length < 4)
-              Text(' ', style: const TextStyle(color: Colors.grey))
-            else if (isDuplicate)
-              Text(
-                '중복된 닉네임 입니다',
-                style: const TextStyle(color: Colors.red),
-              )
-            else
-              Text(
-                '사용 가능한 닉네임 입니다',
-                style: TextStyle(color: Colors.green),
-              ),
-            SizedBox(height: 16.0),
+                      filled: true,
+                      fillColor: Color(0xFFF4F4F5), // gray100
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    controller: _nameController,
+                    style: TextStyle(
+                      color: Color(0xFF09090B), // gray950
+                    ),
+                  ),
+                  if (text.length < 4)
+                    Text(' ', style: const TextStyle(color: Colors.grey))
+                  else if (isDuplicate)
+                    Text(
+                      '중복된 닉네임 입니다',
+                      style: const TextStyle(color: Colors.red),
+                    )
+                  else
+                    Text(
+                      '사용 가능한 닉네임 입니다',
+                      style: TextStyle(color: Colors.green),
+                    ),
+                  SizedBox(height: 16.0),
+            //     ],
+            //   ),
+            // )),
             Spacer(),
             Container(
               width: double.infinity,
               height: 56,
-              margin: EdgeInsets.symmetric(horizontal: 24.0),
               child: ElevatedButton(
                 // onPressed:
                 // _formKey.currentState!.validate() ? onButtonPressed : null,

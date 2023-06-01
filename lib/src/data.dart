@@ -3,24 +3,10 @@ import 'package:tinji/src/key.dart';
 import 'dio.dart';
 
 class TinjiApi {
-  // static String USER_ID = "MH2TIF";
-  // static String STORE_ID = "5ATS7f";
-
-  // static String Token =
-  // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAYXNkZiIsImlhdCI6MTY4NTQ4NzkwMSwiZXhwIjoxNjg1NDkzOTAxfQ.IrB9qtc6jU8rcrvY-LtZ49yzLMP-L_9IsWqpAQkfdq4";
-
-  Future<int> getUserSol() async {
+  
+  Future<double> getUserSol() async {
     String? Token = await getData(ACCESS_KEY);
     String? userId = await getData(USER_ID);
-    if (Token != null) {
-      print(Token);
-    } else {
-      print('Data does not exist');
-    }
-    print("Token");
-    print(Token.toString());
-    print("userId");
-    print(userId.toString());
     final response = await dioClient
         .simpleDio(Token.toString())
         .get('/api/user/sol/${userId.toString()}');
@@ -55,7 +41,7 @@ class TinjiApi {
     String? Token = await getData(ACCESS_KEY);
     String? userId = await getData(USER_ID);
     final response = await dioClient.simpleDio(Token.toString()).post(
-        '/api/store/${userId}/reclist',
+        '/api/store/like',
         data: {"store_id": store_id, "user_id": userId.toString()});
     print(response);
     return response.data['status'];
@@ -96,6 +82,7 @@ class TinjiApi {
     final response = await dioClient
         .simpleDio(Token.toString())
         .get('/api/user/candylog/${userId.toString()}');
+    
     return response.data;
   }
 

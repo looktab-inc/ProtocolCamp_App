@@ -56,7 +56,7 @@ class _ReviewWriteState extends State<ReviewWriteScreen> {
         titleColor: Colors.black,
         onButtonPressed: () {
           print('뒤로가기 버튼이 클릭되었습니다.');
-          Navigator.pop(context);
+          Navigator.of(context).pop();
         },
       ),
       body: Padding(

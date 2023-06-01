@@ -23,13 +23,25 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       title: Row(
         children: [
-          IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              // 뒤로 가기 버튼 동작 설정
+          GestureDetector(
+            onTap: () {
+              // Navigator.of(context).pop();
+              // 버튼이 클릭되었을 때 실행할 코드 작성
+              print('Button clicked!');
               onButtonPressed();
             },
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/back_white.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           ),
+         
           Expanded(
             child: Container(
               alignment: Alignment.center,
@@ -43,6 +55,13 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
             ),
+          ),
+           IconButton(
+            icon: Icon(null),
+            onPressed: () {
+              // 뒤로 가기 버튼 동작 설정
+              onButtonPressed();
+            },
           ),
         ],
       ),
